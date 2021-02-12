@@ -67,46 +67,46 @@ int CUSBPrinter::finalize()
 
 int CUSBPrinter::open( unsigned short vendorId, unsigned short productId )
 {
-  m_dev = this->findDevice( vendorId, productId );
-  if( m_dev == NULL )
-  {
-    return UPC_ERROR_NO_DEVICE;
-  }
+	m_dev = this->findDevice( vendorId, productId );
+	if( m_dev == NULL )
+	{
+		return UPC_ERROR_NO_DEVICE;
+	}
 
-  m_deviceProductId = productId;
-  m_deviceVendorId = vendorId;
+	m_deviceProductId = productId;
+	m_deviceVendorId = vendorId;
 
-  int ret = libusb_open( m_dev, &m_handle );
-  if( ret == UPC_SUCCESS )
-  {
-    this->disableKernelDriver();
+	int ret = libusb_open( m_dev, &m_handle );
+	if( ret == UPC_SUCCESS )
+	{
+		this->disableKernelDriver();
 
-    ret = libusb_claim_interface( m_handle, 0 );
-    if( ret == UPC_SUCCESS )
-    {
-      if( m_devsList != NULL )
-      {
-        libusb_free_device_list( m_devsList, 1 );
-        m_devsList = NULL;
-      }
+		ret = libusb_claim_interface( m_handle, 0 );
+		if( ret == UPC_SUCCESS )
+		{
+			if( m_devsList != NULL )
+			{
+				libusb_free_device_list( m_devsList, 1 );
+				m_devsList = NULL;
+			}
 
-      ret = this->getEndPoints( &m_epOut, &m_epIn );
-      if( ret != UPC_SUCCESS )
-      {
-        CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "Libusb error [%d]", ret );
-      }
-    }
-    else
-    {
-      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "libusb_claim_interface error [%d] - %s", ret, libusb_error_name( ret ) );
-    }
-  }
-  else
-  {
-    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "libusb_open error [%d] - %s", ret, libusb_error_name( ret ) );
-  }
+			ret = this->getEndPoints( &m_epOut, &m_epIn );
+			if( ret != UPC_SUCCESS )
+			{
+				CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "Libusb error [%d]", ret );
+			}
+		}
+		else
+		{
+			CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "libusb_claim_interface error [%d] - %s", ret, libusb_error_name( ret ) );
+		}
+	}
+	else
+	{
+		CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "open", P_HIGH, "libusb_open error [%d] - %s", ret, libusb_error_name( ret ) );
+	}
 
-  return ret;
+	return ret;
 }
 
 int CUSBPrinter::close()
@@ -260,13 +260,13 @@ int CUSBPrinter::getProduct( unsigned char* product, unsigned short* productLen 
     }
     else
     {
-      //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getProduct", P_HIGH, "libusb_get_string_descriptor_ascii error [%d] - %s", ret, libusb_error_name( ret ) );
+      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getProduct", P_HIGH, "libusb_get_string_descriptor_ascii error [%d] - %s", ret, libusb_error_name( ret ) );
       m_lastCommunicationOk = false;
     }
   }
   else
   {
-    //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getProduct", P_HIGH, "Error accessing usb connection, is the device really plugged?" );
+    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getProduct", P_HIGH, "Error accessing usb connection, is the device really plugged?" );
     ret = UPC_ERROR_ACCESS;
   }
 
@@ -287,13 +287,13 @@ int CUSBPrinter::getSerialNumber( unsigned char* sn, unsigned short* snLen )
     }
     else
     {
-      //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getSerialNumber", P_HIGH, "libusb_get_string_descriptor_ascii error [%d] - %s", ret, libusb_error_name( ret ) );
+      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getSerialNumber", P_HIGH, "libusb_get_string_descriptor_ascii error [%d] - %s", ret, libusb_error_name( ret ) );
       m_lastCommunicationOk = false;
     }
   }
   else
   {
-    //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getSerialNumber", P_HIGH, "Error accessing usb connection, is the device really plugged?" );
+    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "getSerialNumber", P_HIGH, "Error accessing usb connection, is the device really plugged?" );
     ret = UPC_ERROR_ACCESS;
   }
 
@@ -309,7 +309,7 @@ int CUSBPrinter::reset()
     ret = libusb_control_transfer( m_handle, SOFT_RESET, 2, 0, m_interface, NULL, 0, DEFAULT_TIMEOUT );
     if( ret != 0 )
     {
-      //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_control_transfer error [%d] - %s", ret, libusb_error_name( ret ) );
+      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_control_transfer error [%d] - %s", ret, libusb_error_name( ret ) );
     }
 
     ret = libusb_reset_device( m_handle );
@@ -318,7 +318,7 @@ int CUSBPrinter::reset()
       this->close();
       this->open( m_deviceVendorId, m_deviceProductId );
     }
-    //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_reset_device ret [%d] - %s", ret, libusb_error_name( ret ) );
+    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_reset_device ret [%d] - %s", ret, libusb_error_name( ret ) );
 
     if( m_handle != NULL &&
       m_epIn != 0 && m_epOut != 0 )
@@ -409,7 +409,7 @@ libusb_device* CUSBPrinter::findDevice( unsigned short vendorId, unsigned short 
       }
       else
       {
-        //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_device_descriptor error [%d] - %s", ret, libusb_error_name( ret ) );
+        CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_device_descriptor error [%d] - %s", ret, libusb_error_name( ret ) );
       }
 
       devCount++;
@@ -417,7 +417,7 @@ libusb_device* CUSBPrinter::findDevice( unsigned short vendorId, unsigned short 
   }
   else
   {
-    //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_device_list error [%d] - %s", ret, libusb_error_name( ret ) );
+    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_device_list error [%d] - %s", ret, libusb_error_name( ret ) );
   }
 
   return NULL;
@@ -464,7 +464,7 @@ int CUSBPrinter::getEndPoints( unsigned char* epOut, unsigned char* epIn )
     }
   }
 
-  //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_active_config_descriptor error [%d] - %s", ret, libusb_error_name( ret ) );
+  CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reset", P_HIGH, "libusb_get_active_config_descriptor error [%d] - %s", ret, libusb_error_name( ret ) );
   return ret;
 }
 
@@ -472,16 +472,16 @@ void CUSBPrinter::reconnectionCheck()
 {
   if( m_lastCommunicationOk == false )
   {
-    //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_HIGH, "Connection problem, trying to reconnect" );
+    CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_HIGH, "Connection problem, trying to reconnect" );
     this->close();
     if( this->open( m_deviceVendorId, m_deviceProductId ) == UPC_SUCCESS )
     {
-      //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_TRACE, "Connection restablished" );
+      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_TRACE, "Connection restablished" );
       m_lastCommunicationOk = true;
     }
     else
     {
-      //CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_HIGH, "Error reconnecting" );
+      CObjectContainer::getTraceInstance()->logAscii( THIS_FILE, "reconnectionCheck", P_HIGH, "Error reconnecting" );
     }
   }
 }

@@ -1,1 +1,3 @@
 04/06/2020,09:21:14.781,CUSBPrinter.cpp,open,3,libusb_open error [-12] - LIBUSB_ERROR_NOT_SUPPORTED
+04/06/2020,11:51:44.777,CUSBPrinter.cpp,open,3,libusb_open error [-12] - LIBUSB_ERROR_NOT_SUPPORTED
+04/06/2020,13:22:17.887,CUSBPrinter.cpp,open,3,libusb_open error [-12] - LIBUSB_ERROR_NOT_SUPPORTED

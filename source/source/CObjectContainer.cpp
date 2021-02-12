@@ -15,7 +15,7 @@ CLogger* CObjectContainer::getTraceInstance()
 {
   if( CObjectContainer::m_trace == NULL )
   {
-    if( !CFileUtils::isDirectory( "./Logs" ) )
+    if( !CFileUtils::isDirectory( "./logs" ) )
     {
       CFileUtils::createDirectoryRecursive( "./logs" );
     }
